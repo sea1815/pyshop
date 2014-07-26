@@ -1,0 +1,115 @@
+{% extends "cn/base.html" %}
+{% block zone_title %}虚拟主机管理{% endblock %}
+{% block content %}
+<ul class="nav nav-pills">
+	<li class="active"><a href="#" onclick="$('#add_server').hide();$('#server_list').show();return false;">虚拟主机列表</a></li>
+    <li><a href="#" onclick="$('#server_list').hide();$('#add_server').show();return false;">新增虚拟主机</a></li>
+</ul>
+<div id="server_list" class="row-fruit">
+    <table class="table table-hover">
+    	<thead>
+    		<tr>
+    			<th>#</th>
+    			<th>操作</th>
+    			<th>域名</th>
+    			<th>域别名</th>
+    			<th>位于主机</th>
+    			<th>应用程序</th>
+    			<th>创建日期</th>
+    			<th>过期日期</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+			{% for item in info.vhosts %}
+    		<tr>
+    			<td>{{loop.index}}</td>
+				<td>
+				    <div class="btn-group">
+						<button role="button" class="btn dropdown-toggle btn-primary btn-small" data-toggle="dropdown" href="#">操作<span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<li><a href="#">仅创建虚拟主机Conf文件<br><small>不绑定主域名</small></a></li>
+							<li><a href="#">仅创建虚拟主机Conf文件<br><small>绑定主域名</small></a></li>
+							<li class="divider"></li>
+							<li><a href="#">创建虚拟主机并安装应用<br><small>不绑定主域名</small></a></li>
+							<li><a href="#">创建虚拟主机并安装应用<br><small>绑定主域名</small></a></li>
+							<li class="divider"></li>
+							<li><a href="#">停用虚拟主机<br><small>不删除文件和数据库</small></a></li>
+							<li><a href="#">删除虚拟主机<br><small>删除文件和数据库</small></a></li>
+							<li class="divider"></li>
+							<li><a href="#">删除本记录</a></li>
+						</ul>
+					</div>
+					<div class="btn-group">
+						<button role="button" class="btn dropdown-toggle btn-success btn-small" data-toggle="dropdown" href="#">备份<span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<li><a href="#">定时备份参数</a></li>
+							<li class="divider"></li>
+							<li><a href="#">加入定时任务</a></li>
+							<li><a href="#">取消定时任务</a></li>
+							<li class="divider"></li>
+							<li><a href="#">手动备份</a></li>
+							<li><a href="#">查看备份库</a></li>
+							<li><a href="#">查看备份历史</a></li>
+							<li class="divider"></li>
+							<li><a href="#">清除备份历史</a></li>
+							<li><a href="#">删除备份库</a></li>
+						</ul>
+					</div>
+					<div class="btn-group">
+    					<!--button role="button" data-toggle="modal" class="btn btn-info" title="查看虚拟主机详情信息" onclick="showServerDetail('{{item.id}}');return false;">
+    						<i class="icon-edit icon-white"></i>详情
+    					</button-->
+						<button role="button" class="btn dropdown-toggle btn-info btn-small" data-toggle="dropdown" href="#">检查<span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<li><a href="#">定时检查参数</a></li>
+							<li class="divider"></li>
+							<li><a href="#">加入定时任务</a></li>
+							<li><a href="#">取消定时任务</a></li>
+							<li class="divider"></li>
+							<li><a href="#">手动检查</a></li>
+							<li><a href="#">查看检查历史</a></li>
+							<li class="divider"></li>
+							<li><a href="#">清除检查历史</a></li>
+						</ul>
+    				</div>
+				</td>
+				<td><a href="http://{{item.subdomain}}.{{item.maindomain}}" target="_blank">{{item.subdomain}}.{{item.maindomain}}</a></td>
+				<td><small>{{item.domainalias}}</small></td>
+				<td><small>{{info.hosts[item.hostid].sname}}</small></td>
+				<td><small>{%if item.appid != -1 %}{{info.apps[item.appid].aname}}{%else%}None{%endif%}</small></td>
+				<td><small>{{item.createdate}}</small></td>
+				<td><small>{{item.expiredate}}</small></td>				
+    		</tr>
+    		{% endfor %}
+    	</tbody>
+    </table>
+    <script language="javascript">
+    	function showServerDetail(id){
+    		$("#server_detail").html("<p><img src='static/img/loading.gif'></p><p>正在载入信息，请稍候……</p>");
+			$('#myModal').on('shown', function () {
+		  		$.get("/ajax/serverdetail/"+id,function(data){
+		  			$("#server_detail").html(data);
+		  		});
+			}).modal('show');
+    	}
+    </script>
+	<!-- Server Detail Modal -->
+	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">服务器详情</h3>
+		</div>
+    			
+  		<div class="modal-body">
+    		<div id="server_detail" style="margin:auto;width:auto;text-align:center;">
+    			<p><img src="{{url_for('static', filename='img/loading.gif')}}"></p>
+    			<p>正在载入信息，请稍候……</p>
+    		</div>
+  		</div>
+  		<div class="modal-footer">
+    		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  		</div>
+	</div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>项目</th>
+			<th>参数</th>	
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>1</td>
+			<td>服务器名称</td>
+			<td>{{info.server.sname}}</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>服务器地址</td>
+			<td>{{info.server.shost}}</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>服务器端口</td>
+			<td>{{info.server.sport}}</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>Apache</td>
+			<td>{% if info.server.sapache==1 %}是{%else%}无{%endif%}</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>MySQL</td>
+			<td>{% if info.server.smysql==1 %}是{%else%}无{%endif%}</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>创建日期</td>
+			<td>{{info.server.screatedate}}</td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td>令牌</td>
+			<td>{{info.server.token}}</td>
+		</tr>
+	</tbody>
+</table>

@@ -1,0 +1,100 @@
+{% extends "cn/base.html" %}
+{% block zone_title %}服务器管理{% endblock %}
+{% block content %}
+<ul class="nav nav-pills">
+	<li class="active"><a href="#" onclick="$('#add_server').hide();$('#server_list').show();return false;">服务器列表</a></li>
+    <li><a href="#" onclick="$('#server_list').hide();$('#add_server').show();return false;">新增服务器</a></li>
+</ul>
+<div id="server_list" class="row-fruit">
+    <table class="table table-hover">
+    	<thead>
+    		<tr>
+    			<th>#</th>
+    			<th>操作</th>
+    			<th>名称</th>
+    			<th>地址</th>
+    			<th>端口</th>
+    			<th>启用</th>
+    			<th>加入日期</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+			{% for item in info.servers %}
+    		<tr>
+    			<td>{{loop.index}}</td>
+				<td>
+				    <div class="btn-group">
+    					<button role="button" data-toggle="modal" class="btn btn-info btn-small" title="查看服务器详情" onclick="showServerDetail('{{item.id}}');return false;">
+    						<i class="icon-search icon-white"></i>详情
+    					</button>
+    					<button class="btn btn-primary btn-small" title="编辑服务器参数"><i class="icon-edit icon-white"></i>编辑</button>
+    					<button class="btn btn-info btn-small" title="列出服务器上的虚拟主机"><i class="icon-list-alt icon-white"></i>列表</button>
+    				</div>
+				    <div class="btn-group">
+						<button class="btn dropdown-toggle btn-success btn-small" data-toggle="dropdown" href="#">检查<span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<li><a href="#">查看服务器状态<br><small>数据库中缓存信息</small></a></li>
+							<li class="divider"></li>
+							<li><a href="#">定时检查设置</a></li>
+							<li><a href="#">加入定时任务</a></li>
+							<li><a href="#">取消定时任务</a></li>
+							<li class="divider"></li>
+							<li><a href="#">手动检查</a></li>
+							<li class="divider"></li>
+							<li><a href="#">查看检查历史</a></li>
+							<li><a href="#">清除检查历史</a></li>
+						</ul>
+					</div>
+				    <div class="btn-group">
+						<button class="btn dropdown-toggle btn-success btn-small" data-toggle="dropdown" href="#">其他<span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<li><a href="#">重启服务器</a></li>
+							<li><a href="#">重启Apache</a></li>
+							<li><a href="#">重启MySQL</a></li>
+							<li class="divider"></li>
+							<li><a href="#">禁用</a></li>
+							<li><a href="#">启用</a></li>
+							<li class="divider"></li>
+							<li><a href="#">删除本记录</a></li>
+						</ul>
+	  				</div>
+				</td>
+    			<td><small>{{item.sname}}</small></td>
+    			<td><small>{{item.shost}}</small></td>
+    			<td><small>{{item.sport}}</small></td>
+				<td><small>{%if item.senabled==1 %}是{%else%}否{%endif%}</small></td>
+				<td><small>{{item.screatedate}}</small></td>
+    		</tr>
+    		{% endfor %}
+    	</tbody>
+    </table>
+    <script language="javascript">
+    	function showServerDetail(id){
+    		$("#server_detail").html("<p><img src='static/img/loading.gif'></p><p>正在载入信息，请稍候……</p>");
+			$('#myModal').on('shown', function () {
+		  		$.get("/ajax/serverdetail/"+id,function(data){
+		  			$("#server_detail").html(data);
+		  		});
+			}).modal('show');
+    	}
+    </script>
+	<!-- Server Detail Modal -->
+	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">服务器详情</h3>
+		</div>
+    			
+  		<div class="modal-body">
+    		<div id="server_detail" style="margin:auto;width:auto;text-align:center;">
+    			<p><img src="{{url_for('static', filename='img/loading.gif')}}"></p>
+    			<p>正在载入信息，请稍候……</p>
+    		</div>
+  		</div>
+  		<div class="modal-footer">
+    		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  		</div>
+	</div>
+
+</div>
+{% endblock %}

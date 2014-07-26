@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="cn">
+	<head>
+		<meta charset="utf-8" />
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<meta name="description" content="">
+    	<meta name="author" content="">
+		<link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+		<!--link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"-->
+		<script language="javascript" src="{{ url_for('static', filename='js/jquery-1.10.1.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+		{% block head %}
+		<title>海蓝多主机管理面板V2.0版</title>
+		{% endblock %}
+		<style type="text/css">
+      		body {
+        		padding-top: 60px;
+        		padding-bottom: 40px;
+      		}
+      		.sidebar-nav {
+        		padding: 9px 0;
+      		}
+
+      	@media (max-width: 980px) {
+        	/* Enable use of floated navbar text */
+        	.navbar-text.pull-right {
+          		float: none;
+          		padding-left: 5px;
+          		padding-right: 5px;
+        		}
+      		}
+		</style>
+    </head>
+	<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+ 		<div class="navbar-inner">
+        	<div class="container-fluid">
+          		<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            		<span class="icon-bar"></span>
+            		<span class="icon-bar"></span>
+            		<span class="icon-bar"></span>
+          		</button>
+				<a class="brand" href="/">SIG-Panel V2.0</a>
+				<div class="nav-collapse collapse">
+					{% if info.logined %}
+          			<p class="navbar-text pull-right">
+              		欢迎<a href="#" class="navbar-link">{{info.user.uname}}</a>。&nbsp;&nbsp;点击<a class="navbar-link" href="/logout">这里</a>退出
+            		</p>
+            		<ul class="nav">
+              			<li class="active"><a href="/">首页</a></li>
+              			<li><a href="#about">文档</a></li>
+              			<li><a href="#about">论坛</a></li>
+              			<li><a href="#about">关于</a></li>
+              			<li><a href="#contact">联系我们</a></li>
+              			<li class="dropdown">
+              			 	<a class="dropdown-toggle" data-toggle="dropdown" href="#">Language<b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="/en">English</a></li>
+								<li><a href="/cn">Chinese</a></li>
+							</ul>
+              			</li>
+            		</ul>
+            		{% endif %}
+          		</div><!--/.nav-collapse -->
+        	</div>
+      	</div>
+      </div>
+
+		<div class="container-fluid">
+		{% if info.logined %}
+<div id='content' class='row-fluid'>
+	<div class='span2 sidebar well' style="background:#fff;">
+		<ul class="nav nav-pills nav-stacked">
+			{% if info.user.ugroup==9 %}
+			<li class="nav-header">系统相关</li>
+			<li><a href='/config'>系统设置</a></li>
+			<li><a href='/servers'>服务器</a></li>
+			<li><a href='/virtualhosts'>虚拟主机</a></li>
+			<li><a href='/apps'>应用程序</a></li>
+			<li><a href='/users'>网站用户</a></li>
+			<li class="nav-header">市场相关</li>
+			<li><a href='/productplan'>产品套餐</a></li>
+			<li><a href='/reseller'>代理商</a></li>
+			<li><a href='/customer'>客户</a></li>
+			<li><a href='/billing'>财务管理</a></li>
+			<li class="nav-header">管理工具</li>
+			<li><a href='/status'>状态监控</a></li>
+			<li><a href='/backup'>备份</a></li>
+			<li><a href='/log'>操作日志</a></li>
+			{% endif %}
+		</ul>
+	</div>
+	<div class='span10 main'>
+		<h2>{%block zone_title%}{% endblock %}</h2>
+		<div class="row-fluid">{% block content %}Building...{% endblock %}</div>
+	</div>
+</div>
+{% else %}
+	<div id="loginbox">
+		<h3 style="text-align:center;">Please login</h3>
+		<form method="post" action="/login">
+		<table>
+			<tr>
+				<td class="cell-label">Username</td>
+				<td class="cell-value"><input name="username" id="username" type="text"></td>
+			</tr>
+			<tr>
+				<td class="cell-label">Password</td>
+				<td class="cell-value"><input name="password" id="password" type="text"></td>
+			</tr>
+			<tr>
+				<td class="cell-button" colspan="2"><input type="submit" value="LOGIN"></td>
+			</tr>
+		</table>
+		</form>
+		{% with messages = get_flashed_messages() %}
+		  {% if messages %}
+		    <ul class="flashes">
+		    {% for message in messages %}
+		      <li>{{ message }}</li>
+    		{% endfor %}
+    		</ul>
+  		 {% endif %}
+		{% endwith %}
+	</div>
+{% endif %}
+		<hr>
+		<footer>Copyright by <a href="http://www.beensimple.com" target="_blank">Sigefried</a>&copy 2014</footer>
+		</div>
+	</body>
+</html>
