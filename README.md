@@ -1,4 +1,4 @@
 pyshop
 ======
 
-A project to build the online shop.
+A project used to construct online shop with themes, multi-language, multi-user, plugins and more features.
